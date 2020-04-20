@@ -58,13 +58,13 @@ describe("<TodoList>", () => {
     act(() => {
       fireEvent.click(getByTestId(document.body, "edit-button"));
       fireEvent.change(textarea, {
-        target: { value: updateItem.content },
+        target: { value: updateItem.including },
       });
       fireEvent.blur(textarea);
     });
 
     await wait(() => expect(TodoApi.updateTodo).toHaveBeenCalled());
-    expect(textarea.value).toEqual(updateItem.content);
+    expect(textarea.value).toEqual(updateItem.including);
   });
   
   test("should add todo item correctly", async () => {
@@ -78,7 +78,7 @@ describe("<TodoList>", () => {
 
     act(() => {
       fireEvent.change(getByTestId(document.body, "task-input"), {
-        target: { value: addedItem.content },
+        target: { value: addedItem.including },
       });
     });
 
@@ -89,6 +89,6 @@ describe("<TodoList>", () => {
 
     const taskItems = getAllByTestId(document.body, "task-item");
     expect(taskItems.length).toEqual(2);
-    expect(taskItems[1].textarea==addedItem.content);
+    expect(taskItems[1].textarea==addedItem.including);
   });
 });
