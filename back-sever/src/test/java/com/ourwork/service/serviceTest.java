@@ -1,7 +1,5 @@
 package com.ourwork.service;
 
-
-
 import com.ourwork.model.model;
 import com.ourwork.store.store;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,61 +26,61 @@ public class serviceTest {
     @InjectMocks
     private service taskService = new service();
 
-    private ArrayList<model> services;
+    private ArrayList<model> tasks;
+
 
     @BeforeEach
     void setUp() {
-        services = new ArrayList<>();
+        tasks = new ArrayList<>();
     }
 
     @Test
-    public void shouldSaveService() {
-        when(taskStore.readModel()).thenReturn(services);
+    public void shouldSaveTask() {
+        when(taskStore.readModel()).thenReturn(tasks);
 
-        model savedService = taskService.saveTask(new model(1L, "newservice"));
+        model savedTask = taskService.saveTask(new model(1L, "newTask"));
 
-        assertNotNull(savedService.getuTime());
+        assertNotNull(savedTask.getuTime());
         verify(taskStore).writeTasks(any());
     }
 
     @Test
-    public void shouldGetAllServices() {
-        when(taskStore.readModel()).thenReturn(services);
+    public void shouldGetAllTasks() {
+        when(taskStore.readModel()).thenReturn(tasks);
 
-        List<model > all = taskService.getAll();
+        List<model> all = taskService.getAll();
 
-        assertEquals(services, all);
+        assertEquals(tasks, all);
     }
 
-    @Test
-    public void shouldFindService() {
-        services.add(new model(1L, "task"));
-        when(taskStore.readModel()).thenReturn(services);
+    public void shouldFindTask() {
+        tasks.add(new model(1L, "task"));
+        when(taskStore.readModel()).thenReturn(tasks);
 
-        Optional<model> optionalservice = taskService.find(1L);
+        Optional<model> optionalTask = taskService.find(1L);
 
-        model task = optionalservice.get();
+        model task = optionalTask.get();
         assertEquals(1L, task.getId());
         assertEquals("task", task.getIncluding());
     }
 
     @Test
-    public void shouldGetEmptyService() {
-        when(taskStore.readModel()).thenReturn(services);
+    public void shouldGetEmptyTask() {
+        when(taskStore.readModel()).thenReturn(tasks);
 
-        Optional<model> optionalservice = taskService.find(1L);
+        Optional<model> optionalTask = taskService.find(1L);
 
-        assertFalse(optionalservice.isPresent());
+        assertFalse(optionalTask.isPresent());
     }
 
     @Test
-    public void shouldUpdateService() {
-        services.add(new model(1L, "task"));
-        when(taskStore.readModel()).thenReturn(services);
+    public void shouldUpdateTask() {
+        tasks.add(new model(1L, "task"));
+        when(taskStore.readModel()).thenReturn(tasks);
 
-        Optional<model> optionalservice = taskService.update(new model(1L, "new task"));
+        Optional<model> optionalTask = taskService.update(new model(1L, "new task"));
 
-        model task = optionalservice.get();
+        model task = optionalTask.get();
         assertEquals(1L, task.getId());
         assertEquals("new task", task.getIncluding());
         assertNotNull(task.getuTime());
@@ -90,34 +88,34 @@ public class serviceTest {
     }
 
     @Test
-    public void shouldNotUpdateServiceWhenNotExist() {
-        when(taskStore.readModel()).thenReturn(services);
+    public void shouldNotUpdateTaskWhenNotExist() {
+        when(taskStore.readModel()).thenReturn(tasks);
 
-        Optional<model> optionalservice = taskService.update(new model(1L, "new task"));
+        Optional<model> optionalTask = taskService.update(new model(1L, "new task"));
 
-        assertFalse(optionalservice.isPresent());
+        assertFalse(optionalTask.isPresent());
         verify(taskStore, new Times(0)).writeTasks(any());
     }
 
     @Test
-    public void shouldDeleteService() {
-        services.add(new model(1L, "task"));
-        when(taskStore.readModel()).thenReturn(services);
+    public void shouldDeleteTask() {
+        tasks.add(new model(1L, "task"));
+        when(taskStore.readModel()).thenReturn(tasks);
 
-        Optional<model> optionalservice = taskService.delete(1L);
+        Optional<model> optionalTask = taskService.delete(1L);
 
-        model task = optionalservice.get();
+        model task = optionalTask.get();
         assertEquals(1L, task.getId());
         verify(taskStore).writeTasks(any());
     }
 
     @Test
-    public void shouldNotDeleteServiceWhenNotExist() {
-        when(taskStore.readModel()).thenReturn(services);
+    public void shouldNotDeleteTaskWhenNotExist() {
+        when(taskStore.readModel()).thenReturn(tasks);
 
-        Optional<model> optionalservice = taskService.delete(1L);
+        Optional<model> optionalTask = taskService.delete(1L);
 
-        assertFalse(optionalservice.isPresent());
+        assertFalse(optionalTask.isPresent());
         verify(taskStore, new Times(0)).writeTasks(any());
     }
 }

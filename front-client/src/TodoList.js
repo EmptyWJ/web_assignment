@@ -24,7 +24,7 @@ const TodoList = () => {
 
     const newTask = {
       id: _.parseInt(list.length ? list[list.length - 1].id : 0) + 1,
-      content: inputValue,
+      including: inputValue,
     };
 
     addTodo(newTask).then(() => {
@@ -39,7 +39,7 @@ const TodoList = () => {
     });
 
   const handleUpdateTask = (task) => {
-    if (task.content === "") return;
+    if (task.including === "") return;
 
     updateTodo(task).then((response) => {
       setList(

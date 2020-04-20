@@ -8,10 +8,10 @@ const TodoItem = ({ item, onItemUpdate, onItemDelete }) => {
   return (
     <li className="task-item" id={"task-item-" + todoItem.id} data-testid="task-item">
       <TextField
-        value={todoItem.content}
+        value={todoItem.including}
         disabled={!isEditable}
         multiline
-        onChange={(e) => setTodoItem({ ...item, content: e.target.value })}
+        onChange={(e) => setTodoItem({ ...item, including: e.target.value })}
         onBlur={() => {
           onItemUpdate(todoItem);
           setIsEditable(false);

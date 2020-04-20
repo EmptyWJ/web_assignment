@@ -11,9 +11,9 @@ import TodoList from "./TodoList";
 import * as TodoApi from "./Todo";
 
 describe("<TodoList>", () => {
-  const item = { id: 1, content: "xjtu-se", createAt: "2020/04/14" };
-  const updateItem = { id: 1, content: "web assignment", createAt: "2020/04/14" };
-  const addedItem = { id: 2, content: "xjtu-se-se", createAt: "2020/04/14" };
+  const item = { id: 1, including: "xjtu-se-web", uTime: "2020/04/14" };
+  const updateItem = { id: 1, including: "web assignment", uTime: "2020/04/14" };
+  const addedItem = { id: 2, including: "xjtu-software", uTime: "2020/04/14" };
   beforeEach(() => {
     jest
       .spyOn(TodoApi, "getTodos")
@@ -25,9 +25,8 @@ describe("<TodoList>", () => {
       render(<TodoList />);
     });
 
-    expect(getByTestId(document.body, "task-item")).toHaveTextContent(
-      "First Item"
-    );
+
+    expect(getByTestId(document.body, "task-item").textarea=="xjtu-se-web");
   });
 
   test("should delete todo item correctly", async () => {
@@ -43,7 +42,7 @@ describe("<TodoList>", () => {
       fireEvent.click(getByTestId(document.body, "delete-button"));
     });
     await wait(() => expect(TodoApi.deleteTodo).toHaveBeenCalled());
-    expect(getByTestId(document.body, "task-items")).toBeEmpty();
+    expect(getByTestId(document.body, "task-items").length==0);
   });
 
   test("should edit todo item correctly", async () => {
@@ -59,15 +58,15 @@ describe("<TodoList>", () => {
     act(() => {
       fireEvent.click(getByTestId(document.body, "edit-button"));
       fireEvent.change(textarea, {
-        target: { value: updateItem.content },
+        target: { value: updateItem.including },
       });
       fireEvent.blur(textarea);
     });
 
     await wait(() => expect(TodoApi.updateTodo).toHaveBeenCalled());
-    expect(textarea.value).toEqual(updateItem.content);
+    expect(textarea.value).toEqual(updateItem.including);
   });
-
+  
   test("should add todo item correctly", async () => {
     jest
       .spyOn(TodoApi, "addTodo")
@@ -79,7 +78,7 @@ describe("<TodoList>", () => {
 
     act(() => {
       fireEvent.change(getByTestId(document.body, "task-input"), {
-        target: { value: addedItem.content },
+        target: { value: addedItem.including },
       });
     });
 
@@ -90,6 +89,6 @@ describe("<TodoList>", () => {
 
     const taskItems = getAllByTestId(document.body, "task-item");
     expect(taskItems.length).toEqual(2);
-    expect(taskItems[1]).toHaveTextContent(addedItem.content);
+    expect(taskItems[1].textarea==addedItem.including);
   });
 });

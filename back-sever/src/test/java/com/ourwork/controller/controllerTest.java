@@ -29,8 +29,7 @@ public class controllerTest {
 
     @MockBean
     private service service;
-
-    private List<model> tasks = new ArrayList<>();
+    private List<model> tasks = new ArrayList<model>();
 
     @BeforeEach
     void setUp() {
@@ -40,61 +39,66 @@ public class controllerTest {
     @Test
     public void shouldGetAll() throws Exception {
         when(service.getAll()).thenReturn(tasks);
-        this.mockMvc.perform(get("/api/tasks")).andDo(print()).andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].content").value("a"));
+
+        this.mockMvc.perform(get("/api/schedule")).andDo(print()).andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].including").value("a"));
     }
 
+
     @Test
-    public void shouldFindserviceByIdIfPresent() throws Exception {
+    public void shouldFindTaskByIdIfPresent() throws Exception {
         when(service.find(3L)).thenReturn(Optional.of(new model(3L, "X")));
-        this.mockMvc.perform(get("/api/tasks/3")).andDo(print()).andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").value("X"));
+        this.mockMvc.perform(get("/api/schedule/3")).andDo(print()).andExpect(status().isOk())
+                .andExpect(jsonPath("$.including").value("X"));
     }
 
     @Test
     public void shouldReturnNotFoundWhenFindByIdIfNotPresent() throws Exception {
         when(service.find(3L)).thenReturn(Optional.empty());
-        this.mockMvc.perform(get("/api/tasks/3")).andDo(print()).andExpect(status().isNotFound());
+
+        this.mockMvc.perform(get("/api/schedule/3")).andDo(print()).andExpect(status().isNotFound());
     }
 
     @Test
     public void shouldDeleteWhenExist() throws Exception {
         when(service.delete(2L)).thenReturn(Optional.of(new model(2L, "B")));
-        this.mockMvc.perform(delete("/api/tasks/2")).andDo(print()).andExpect(status().isNoContent());
+
+        this.mockMvc.perform(delete("/api/schedule/2")).andDo(print()).andExpect(status().isNoContent());
     }
 
     @Test
     public void shouldReturnNotFoundWhenDeleteIfNotPresent() throws Exception {
         when(service.delete(2L)).thenReturn(Optional.empty());
-        this.mockMvc.perform(delete("/api/tasks/2")).andDo(print()).andExpect(status().isNotFound());
+
+        this.mockMvc.perform(delete("/api/schedule/2")).andDo(print()).andExpect(status().isNotFound());
     }
 
     @Test
-    public void shouldCreateService() throws Exception {
+    public void shouldCreateTask() throws Exception {
         model task = new model(1L, "new");
-        model savedservice = new model(1L, "new");
-        when(service.saveTask(task)).thenReturn(savedservice);
-        this.mockMvc.perform(post("/api/tasks")
+        model savedTask = new model(1L, "new");
+        when(service.saveTask(task)).thenReturn(savedTask);
+        this.mockMvc.perform(post("/api/schedule")
                 .contentType(MediaType.APPLICATION_JSON).content(new Gson().toJson(task)))
                 .andDo(print()).andExpect(status().isCreated());
     }
 
     @Test
-    public void shouldChangeServiceById() throws Exception {
+    public void shouldChangeTaskById() throws Exception {
         model task = new model(2L, "updated");
         model updated = new model(1L, "updated");
         when(service.update(any())).thenReturn(Optional.of(updated));
-        this.mockMvc.perform(put("/api/tasks/1")
+        this.mockMvc.perform(put("/api/schedule/1")
                 .contentType(MediaType.APPLICATION_JSON).content(new Gson().toJson(task)))
                 .andDo(print()).andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").value("updated"));
+                .andExpect(jsonPath("$.including").value("updated"));
     }
 
     @Test
-    public void shouldReturnNotFoundWhenChangeServiceButDoesNotExit() throws Exception {
+    public void shouldReturnNotFoundWhenChangeTaskButDoesNotExit() throws Exception {
         model task = new model(2L, "updated");
         when(service.update(any())).thenReturn(Optional.empty());
-        this.mockMvc.perform(put("/api/tasks/1")
+        this.mockMvc.perform(put("/api/schedule/1")
                 .contentType(MediaType.APPLICATION_JSON).content(new Gson().toJson(task)))
                 .andDo(print()).andExpect(status().isNotFound());
     }

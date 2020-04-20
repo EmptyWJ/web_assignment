@@ -1,6 +1,6 @@
 import {request, requestWithBody, deleteItem} from './Base'
 
-const TODO_PATH = "/api/tasks";
+const TODO_PATH = "/api/schedule";
 
 export const getTodos = () => {
      return request(TODO_PATH)
